@@ -1,4 +1,4 @@
-import { Demo, Hero } from "./components"
+import { Demo, Hero, Footer } from "./components"
 import "./App.css";
 
 
@@ -12,6 +12,7 @@ const App = () => {
       <div className="app">
         <Hero />
         <Demo />
+        <Footer />
       </div>
     </main>
   )

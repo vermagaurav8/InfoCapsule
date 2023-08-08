@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLazyGetCapsuleQuery } from '../services/capsule'
+import { Loader } from './index'
 import { AiFillCopy } from 'react-icons/ai'
 
 
@@ -50,6 +51,11 @@ const Demo = () => {
     setTimeout(() => setCopied(false), 3000);
   }
 
+  const handleSummaryCopy = () => {
+    navigator.clipboard.writeText(article.summary)
+    alert('Summary Copied to Clipboard')
+  }
+
   return (
     <section className="w-full flex">
       <div className="flex flex-col w-full gap-2">
@@ -70,29 +76,35 @@ const Demo = () => {
           </button>
         </form>
       
-        <div className="flex flex-col items-center justify-center ">
-          <p className="text-xl font-bold text-slate-900 lg:text-xl dark:text-slate-900  mt-10 ">History</p>
+        <div className="flex flex-col">
+          <p className="text-xl font-bold text-slate-900 lg:text-xl dark:text-slate-900 ml-20 mt-10 ">History</p>
+          <hr className="w-3/4 ml-20" />
           <div className="flex flex-col ">
-            {allArticles.map((item, index) => (
+            {allArticles.length == 0 ? 
+              (<p className="text-xl  text-slate-900 lg:text-xl dark:text-slate-900 ml-20 mt-2 ">
+                Nothing Here!!
+              </p>) 
+              :
+              (allArticles.map((item, index) => (
                 <div 
                   key={`link-${index}`}
                   onClick={() => setArticle(item)}
-                  className="flex my-2 items-center justify-center w-1/2"
+                  className="flex my-2 items-center justify-center w-1/2 border-solid border-2 border-slate-900 ml-20 py-1"
                 >
                   <div className="copy_btn mr-2 ml-4 border-solid" onClick={() => handleCopy(item.url)}>
                     <AiFillCopy size={25}/>
                   </div>
                   <p className="flex-1 font-satoshi text-blue-700 font-medium text-sm truncate">{item.url}</p>
                 </div>
-            ))}
+              )))}
           </div>
         </div>
       </div>
 
      {/* Display Result */}
-     <div className='max-w-full flex justify-center items-center'>
+     <div className='w-full flex '>
         {isFetching ? (
-          <img src="" alt='loader' className='w-20 h-20 object-contain' />
+          <Loader msg={"Summarizing your Article"}/>
         ) : error ? (
           <p className='font-inter font-bold text-black text-center'>
             Well, that wasn't supposed to happen...
@@ -103,12 +115,15 @@ const Demo = () => {
           </p>
         ) : (
           article.summary && (
-            <div className='flex flex-col gap-3'>
-              <h2 className='font-satoshi font-bold text-gray-600 text-xl'>
-                Article <span className='blue_gradient'>Summary</span>
-              </h2>
-              <div className='summary_box'>
-                <p className='font-inter font-medium text-sm text-gray-700'>
+            <div className='flex flex-col gap-3 w-full mr-10'>
+              <div className="flex">                
+                <p className="text-xl font-bold text-slate-900 lg:text-2xl dark:text-slate-900 font-satoshi ">Summary</p>
+                <button className="ml-5" onClick={handleSummaryCopy}>
+                  <AiFillCopy size={25}/>
+                </button>
+              </div>
+              <div className='summary_box mr-20 border-solid border-slate-900 '>
+                <p className='font-inter font-medium text-sm text-slate-900 text-justify '>
                   {article.summary}
                 </p>
               </div>
